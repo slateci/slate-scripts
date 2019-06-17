@@ -1,5 +1,7 @@
 git clone https://github.com/Mansalu/prp-osg-cvmfs.git
 
+git checkout slate
+
 kubectl delete configmap -n cvmfs --all
 
 kubectl delete -f prp-osg-cvmfs/k8s/cvmfs/storageclasses/
