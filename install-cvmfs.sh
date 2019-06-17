@@ -80,6 +80,8 @@ yum install git
 
 git clone https://github.com/Mansalu/prp-osg-cvmfs.git
 
+git checkout slate
+
 cat << EOF > default.local 
 CVMFS_SERVER_URL="http://cvmfs-s1bnl.opensciencegrid.org:8000/cvmfs/@fqrn@;http://cvmfs-s1fnal.opensciencegrid.org:8000/cvmfs/@fqrn@;http://cvmfs-s1goc.opensciencegrid.org:8000/cvmfs/@fqrn@"
 CVMFS_KEYS_DIR=/etc/cvmfs/keys/opensciencegrid.org/
