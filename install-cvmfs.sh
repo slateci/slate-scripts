@@ -91,7 +91,7 @@ CVMFS_SERVER_URL="http://cvmfs-s1bnl.opensciencegrid.org:8000/cvmfs/@fqrn@;http:
 CVMFS_KEYS_DIR=/etc/cvmfs/keys/opensciencegrid.org/
 CVMFS_USE_GEOAPI=yes
 CVMFS_HTTP_PROXY="http://$CLUSTER_IP:3128"
-CVMFS_QUOTA_LIMIT=5000
+CVMFS_QUOTA_LIMIT=25000
 CVMFS_REPOSITORIES=atlas.cern.ch,atlas-condb.cern.ch,atlas-nightlies.cern.ch,sft.cern.ch,geant4.cern.ch,grid.cern.ch,cms.cern.ch,oasis.opensciencegrid.org
 EOF
 
