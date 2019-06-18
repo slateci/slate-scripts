@@ -76,11 +76,15 @@ echo "Adding CVMFS"
 
 kubectl create namespace cvmfs
 
+sleep 1s
+
 yum install git 
 
 git clone https://github.com/Mansalu/prp-osg-cvmfs.git
 
 git checkout slate
+
+sleep 1s
 
 cat << EOF > default.local 
 CVMFS_SERVER_URL="http://cvmfs-s1bnl.opensciencegrid.org:8000/cvmfs/@fqrn@;http://cvmfs-s1fnal.opensciencegrid.org:8000/cvmfs/@fqrn@;http://cvmfs-s1goc.opensciencegrid.org:8000/cvmfs/@fqrn@"
@@ -93,11 +97,17 @@ EOF
 
 kubectl create configmap cvmfs-osg-config -n cvmfs --from-file=default.local
 
+sleep 1s
+
 rm -rf default.local
 
 kubectl create -f  prp-osg-cvmfs/k8s/cvmfs/accounts/
 
+sleep 4s
+
 kubectl create -f prp-osg-cvmfs/k8s/cvmfs/csi-processes/
+
+sleep 4s
 
 kubectl create -f prp-osg-cvmfs/k8s/cvmfs/storageclasses/
 
