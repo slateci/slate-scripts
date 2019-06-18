@@ -82,7 +82,11 @@ yum install git
 
 git clone https://github.com/Mansalu/prp-osg-cvmfs.git
 
+cd prp-osg-cvmfs
+
 git checkout slate
+
+cd ..
 
 sleep 1s
 
