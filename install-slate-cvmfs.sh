@@ -114,7 +114,9 @@ gpgcheck=0
 repo_gpgcheck=0
 EOF
 
-yum install slate-client -y 
+#yum install slate-client -y 
+# temporary hack
+yum localinstall https://jenkins.slateci.io/artifacts/client/slate-client-508-1.el7.x86_64.rpm -y
 
 slate cluster create --group $INITIALGROUP $CLUSTERNAME --org $ORGNAME -y
 
