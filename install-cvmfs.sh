@@ -17,21 +17,6 @@ cat << EOF > squidconfig
 # Enables unique instances of Frontier Squid in one namespace
 Instance: cvmfs
 
-### SLATE-START ###
-# Deployment specific information used for the SLATE methodology
-SLATE:
-  # ElasticSearch information for sending application logs
-  Logging:
-    Enabled: true
-    Server:
-      Name: atlas-kibana.mwt2.org
-      Port: 9200
-  # The name of the cluster that the application is being deployed on
-  Cluster:
-    Name: $CLUSTERNAME
-  LocalStorage: false
-### SLATE-END ###
-
 Service:
   # Port that the service will utilize.
   Port: 3128
