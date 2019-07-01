@@ -182,7 +182,7 @@ echo "Adding CVMFS"
 
 kubectl create namespace cvmfs
 
-yum install git 
+yum install git -y
 
 git clone https://github.com/Mansalu/prp-osg-cvmfs.git
 
