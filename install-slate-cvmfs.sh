@@ -12,7 +12,9 @@ CLUSTERNAME="CLUSTER NAME"
 # Supplementary groups can be added later.
 INITIALGROUP="GROUP NAME"
 # Organization name. Simplest to keep this as a single word or acronym for now
-ORGNAME="myorg"
+ORGNAME="ORG NAME"
+# The pool of IP address you want the 'load balancer' to allocate.
+IPPOOL="IP RANGE OR CIDR"
 
 ############################
 
@@ -91,6 +93,10 @@ sysctl --system
 
 echo "Initializing Kubernetes cluster with 192.168 RFC1918 range for Pod CIDR..."
 kubeadm init --pod-network-cidr=192.168.0.0/16
+if [ "$?" -ne 0 ]; then
+  echo "kubeadm init failed" 1>&2
+  exit 1
+fi
 
 echo "Copying Kubernetes config to root's homedir..."
 mkdir -p ~/.kube/
@@ -104,6 +110,27 @@ kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/
 echo "Removing Master taint, so we can run pods on a single-node cluster..."
 kubectl taint nodes --all node-role.kubernetes.io/master-
 
+echo "Installing MetalLB load balancer..."
+kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.7.3/manifests/metallb.yaml
+
+cat << EOF > metallb-config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - ${IPPOOL}
+EOF
+
+kubectl create -f metallb-config.yaml
+rm -f metallb-config.yaml
+
 echo "Installing SLATE repository and client..."
 cat << EOF > /etc/yum.repos.d/slate.repo
 [slate-client]
@@ -114,9 +141,7 @@ gpgcheck=0
 repo_gpgcheck=0
 EOF
 
-#yum install slate-client -y 
-# temporary hack
-yum localinstall https://jenkins.slateci.io/artifacts/client/slate-client-508-1.el7.x86_64.rpm -y
+yum install slate-client -y
 
 slate cluster create --group $INITIALGROUP $CLUSTERNAME --org $ORGNAME -y
 
@@ -127,20 +152,6 @@ cat << EOF > squidconfig
 # Generates app name as "osg-frontier-squid-[Instance]"
 # Enables unique instances of Frontier Squid in one namespace
 Instance: cvmfs
-### SLATE-START ###
-# Deployment specific information used for the SLATE methodology
-SLATE:
-  # ElasticSearch information for sending application logs
-  Logging:
-    Enabled: true
-    Server:
-      Name: atlas-kibana.mwt2.org
-      Port: 9200
-  # The name of the cluster that the application is being deployed on
-  Cluster:
-    Name: $CLUSTERNAME
-  LocalStorage: false
-### SLATE-END ###
 Service:
   # Port that the service will utilize.
   Port: 3128
@@ -174,7 +185,7 @@ EOF
 
 slate app install osg-frontier-squid --group $INITIALGROUP --cluster $CLUSTERNAME --conf squidconfig
 
-rm -rf squidconfig
+rm -f squidconfig
 
 export CLUSTER_IP=$(kubectl get --namespace slate-group-$INITIALGROUP -o jsonpath="{.spec.clusterIP}" service osg-frontier-squid-cvmfs)
 
