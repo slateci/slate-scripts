@@ -21,7 +21,6 @@ SLATE_TOKEN=
 
 On the Kubernetes master node, run the following command in order:
 ```
-00-set-cluster-id.sh
 01-install-slate-cli.sh
 02-install-access-token.sh
 02-install-access-token.sh.clemson
@@ -35,8 +34,8 @@ On the Kubernetes master node, run the following command in order:
 08-setup-load-balancer.sh
 09-install-slate-client.sh
 10-join-federation.sh
-11-install-osg-squid.sh
-12-install-cvmfs.sh
+a01-install-osg-squid.sh
+a02-install-cvmfs.sh
 ```
 
 ## Install Kubernetes Work Node ##
