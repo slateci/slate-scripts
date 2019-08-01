@@ -1,0 +1,41 @@
+INITIALGROUP=
+CLUSTERNAME=
+ORGNAME=
+IPPOOL=
+SLATE_TOKEN=
+
+#INITIALGROUP=slate-dev
+#CLUSTERNAME=aci-slate
+#ORGNAME=caci
+#IPPOOL=192.168.10.13/28
+#IPPOOL=130.127.217.13-130.127.217.19
+
+check_variable() {
+    for VAR in $@; do 
+        VALUE="$VAR"
+        if [ -z ${!VALUE} ]; then
+            echo "Please set a correct value for $VAR" 
+            exit 1
+        else
+            echo "$VAR = \"${!VALUE}"\"
+        fi
+    done
+}
+
+check_ip_range() {
+    IPS=$1
+    if [[ $IPS =~ ^([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/[0-9]{1,2})$ ]] ||
+       [[ $IPS =~ ^([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\-[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})$ ]]; 
+    then
+        return
+    else 
+        echo "IP range "$IPS" not in proper format"
+        exit 1
+    fi
+}
+
+check_variable INITIALGROUP CLUSTERNAME ORGNAME IPPOOL SLATE_TOKEN
+check_ip_range $IPPOOL
+
+export INITIALGROUP CLUSTERNAME ORGNAME IPPOOL SLATE_TOKEN
+
