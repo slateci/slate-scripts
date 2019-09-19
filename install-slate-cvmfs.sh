@@ -104,8 +104,7 @@ cp -f /etc/kubernetes/admin.conf ~/.kube/config
 
 
 echo "Installing Calico networking plugin..."
-kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
-kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml
 
 echo "Removing Master taint, so we can run pods on a single-node cluster..."
 kubectl taint nodes --all node-role.kubernetes.io/master-
